@@ -1,0 +1,87 @@
+.inicio-container {
+  display: flex;
+  height: 80vh;
+  padding: 20px;
+  gap: 20px;
+  flex-wrap: wrap; /* permite que el contenido se acomode en móviles */
+}
+
+.masonry-slider {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column; /* para stack de tracks */
+  gap: 10px;
+}
+
+.masonry-track,
+.masonry-track2,
+.masonry-track3,
+.masonry-track4,
+.masonry-track5 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: max-content;
+}
+
+.masonry-track { animation: slide 120s linear infinite; }
+.masonry-track2 { animation: slide 80s linear infinite; }
+.masonry-track3 { animation: slide 100s linear infinite; }
+.masonry-track4 { animation: slide 90s linear infinite; }
+.masonry-track5 { animation: slide 110s linear infinite; }
+
+.masonry-item {
+  flex: 0 0 auto;
+  width: 150px;
+  height: 150px;
+}
+
+.masonry-item img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.inicio-text {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inicio-text h1 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* MEDIA QUERIES PARA MÓVIL */
+@media (max-width: 768px) {
+  .inicio-container {
+    flex-direction: column; /* stack vertical */
+    height: auto; /* se adapta al contenido */
+  }
+
+  .masonry-slider {
+    width: 100%;
+  }
+
+  .masonry-track2,
+  .masonry-track3,
+  .masonry-track4,
+  .masonry-track5 {
+    display: none; /* solo dejamos el primer carrusel visible */
+  }
+
+  .inicio-text {
+    margin-top: 20px;
+  }
+}

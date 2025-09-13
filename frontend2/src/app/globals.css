@@ -1,0 +1,11 @@
+@import "tailwindcss";
+/* Tailwind + CSS personalizado */
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Ajusta según la cantidad de contenido */
+}
+
+.carrusel-animado {
+  display: flex;
+  animation: scroll-left 20s linear infinite;
+}
