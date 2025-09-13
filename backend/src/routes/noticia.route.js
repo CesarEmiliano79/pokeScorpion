@@ -1,0 +1,11 @@
+import express from 'express';
+import { protectRoute, esAdmin } from '../middlewares/auth.middleware.js';
+import { noticia, noticias, addNoticia, updateNoticia, ocultarNoticia, checarAutenticado } from '../controllers/noticia.controller.js';
+const router = express.Router();
+router.get("/noticia/:NoticiaId", noticia);
+router.get("/", protectRoute, noticias);
+router.post("/add-noticia", protectRoute, esAdmin, addNoticia);
+router.put("/update-noticia/:NoticiaId", protectRoute, esAdmin, updateNoticia);
+router.post("/ocultar-noticia/:NoticiaId", protectRoute, esAdmin, ocultarNoticia);
+router.get("/check", protectRoute, checarAutenticado);
+export default router;
