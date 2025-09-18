@@ -12,7 +12,7 @@ if(!fs.existsSync(subidaFolder))
 if(!fs.existsSync(antiguoFolder))
     fs.mkdirSync(antiguoFolder,{recursive: true});
 
-// Validacion de tipo de imagen
+// Funcion anonima que hace la validacion de tipo de imagen
 export const isImage = (mimetype) =>{
     // El parametro indica la naturaleza del formato
     return ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(mimetype)
@@ -22,20 +22,20 @@ const MAX_SIZE = 10 * 1024 * 1024;
 
 // Guardar imagen desde base64
 export const salvarImagenBase64 = async (imagenBase64)=>{
-    const matches = imagenBase64.match(/^data:(.+);base64,(.+)$/);
+    const matches = imagenBase64.match(/^data:(.+);base64,(.+)$/); // validacion del contenido con una regex y del tipo de imagen tmb
     if (!matches) throw new Error("Nel we, intentale por otro lado");
     const mimetype = matches[1];
     const data = matches[2];
     if(!isImage(mimetype)) throw new Error("Entiende que solo imagenes!");
 
-    const buffer = Buffer.from(data, "base64"); //Dentro del buffer tirame paro de guardarlo
+    const buffer = Buffer.from(data, "base64"); //Dentro del buffer tirame paro de decodificarlo y checar si cabe
     if(buffer.length > MAX_SIZE)
         throw new Error("Entiende que son imagenes de pobre, pesa mucho por la resolucion");
 
-    const ext = mimetype.split("/")[1];
+    const ext = mimetype.split("/")[1]; // extrae la extension
     const nombreArchivo = `${crypto.randomBytes(8).toString("hex")}.${ext}`; // Generame el nombre que quieras en hexa, eso me da igual
     const nombreRuta = path.join(subidaFolder, nombreArchivo);
-    await fs.promises.writeFile(nombreRuta, buffer); // De lo que me guardaste, ahora si mandamelo a la ruta que te asigno
+    await fs.promises.writeFile(nombreRuta, buffer); // De lo que me guardaste, ahora si mandamelo a la ruta que te asigno (escribe el buffer en disco de forma asíncrona.)
     return nombreArchivo; // retorname en donde vas a quedar
 }
 
