@@ -1,11 +1,8 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 import { generartoken } from "../lib/utils.js";
-
-// Regex más estricta para emails válidos
-const emailRegex = /^(?![.-])([a-zA-Z0-9._%+-]+)@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-
+import { validateEmail, validateContra, validateUser } from "../services/validation.service.js";
+import { ErrorApp } from "../utils/ErrorApp.js";
 export const register = async (req, res) => {
     try {
         const { username, email, password, sexo } = req.body;
@@ -14,16 +11,9 @@ export const register = async (req, res) => {
         if (!username || !email || !password) {
             return res.status(400).json({ mensaje: "Favor de llenar todos los campos" });
         }
-
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ mensaje: "Correo inválido" });
-        }
-
-        if (!passwordRegex.test(password)) {
-            return res.status(400).json({
-                mensaje: "La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial"
-            });
-        }
+        validateUser(username);
+        validateEmail(email);
+        validateContra(password);
 
         // Verificar si el usuario ya existe
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -48,11 +38,15 @@ export const register = async (req, res) => {
 
         await newUser.save();
         generartoken(newUser, res);
-
         res.status(201).json({ mensaje: "Usuario registrado correctamente" });
     } catch (error) {
+        if(error instanceof ErrorApp){
+            console.log("Error: " + error);
+            res.status(error.status).json({mensaje: error.mensaje})
+        }else{
         console.error("Error en registro:", error.message);
         res.status(500).json({ mensaje: "Hubo un error en el servidor" });
+        }
     }
 };
 
@@ -64,9 +58,8 @@ export const login = async (req, res) => {
             return res.status(400).json({ mensaje: "Favor de llenar todos los campos" });
         }
 
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ mensaje: "Correo inválido" });
-        }
+        validateEmail(email);
+        // No hay necesidad de limpiar la password de mongo lo hace por si
 
         const user = await User.findOne({ email });
         if (!user) {
@@ -81,8 +74,13 @@ export const login = async (req, res) => {
         generartoken(user, res);
         res.status(200).json({ mensaje: `Bienvenido ${user.username}` });
     } catch (error) {
-        console.error("Error en login:", error.message);
-        res.status(500).json({ mensaje: "Error interno del servidor" });
+        if(error instanceof ErrorApp){
+            console.log("Error: " + error);
+            res.status(error.status).json({mensaje: error.mensaje})
+        }else{
+        console.error("Error en registro:", error.message);
+        res.status(500).json({ mensaje: "Hubo un error en el servidor" });
+        }
     }
 };
 

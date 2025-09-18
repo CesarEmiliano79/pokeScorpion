@@ -1,11 +1,8 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
   "/pages/crea-noticia/page": "app/pages/crea-noticia/page.js",
   "/pages/home/page": "app/pages/home/page.js",
-  "/pages/inicio/page": "app/pages/inicio/page.js",
-  "/pages/login/page": "app/pages/login/page.js",
   "/pages/noticias/[id]/editar/page": "app/pages/noticias/[id]/editar/page.js",
   "/pages/noticias/[id]/page": "app/pages/noticias/[id]/page.js",
   "/pages/noticias/page": "app/pages/noticias/page.js",

@@ -222,8 +222,6 @@
     --color-amber-500: #f99c00;
     --color-amber-600: #dd7400;
     --color-yellow-400: #fac800;
-    --color-green-500: #00c758;
-    --color-green-600: #00a544;
     --color-blue-500: #3080ff;
     --color-blue-600: #155dfc;
     --color-indigo-300: #a4b3ff;
@@ -240,7 +238,6 @@
     --color-gray-700: #364153;
     --color-gray-800: #1e2939;
     --color-gray-900: #101828;
-    --color-gray-950: #030712;
     --color-zinc-300: #d4d4d8;
     --color-zinc-500: #71717b;
     --color-zinc-700: #3f3f46;
@@ -254,7 +251,6 @@
     --container-sm: 24rem;
     --container-md: 28rem;
     --container-xl: 36rem;
-    --container-2xl: 42rem;
     --container-3xl: 48rem;
     --container-4xl: 56rem;
     --container-5xl: 64rem;
@@ -303,8 +299,6 @@
       --color-amber-500: color(display-p3 .93994 .620584 .0585367);
       --color-amber-600: color(display-p3 .827144 .467166 .0336006);
       --color-yellow-400: color(display-p3 .959941 .790171 .0585198);
-      --color-green-500: color(display-p3 .308734 .774754 .374307);
-      --color-green-600: color(display-p3 .243882 .640824 .294808);
       --color-blue-500: color(display-p3 .266422 .491219 .988624);
       --color-blue-600: color(display-p3 .174493 .358974 .950247);
       --color-indigo-300: color(display-p3 .650892 .700156 .990824);
@@ -321,7 +315,6 @@
       --color-gray-700: color(display-p3 .219968 .253721 .318679);
       --color-gray-800: color(display-p3 .125854 .159497 .216835);
       --color-gray-900: color(display-p3 .070423 .0928982 .151928);
-      --color-gray-950: color(display-p3 .0144294 .0270755 .068534);
       --color-zinc-300: color(display-p3 .831087 .831083 .846819);
       --color-zinc-500: color(display-p3 .442983 .442931 .480324);
       --color-zinc-700: color(display-p3 .246478 .246448 .273934);
@@ -341,8 +334,6 @@
       --color-amber-500: lab(72.7183% 31.8672 97.9407);
       --color-amber-600: lab(60.3514% 40.5624 87.1228);
       --color-yellow-400: lab(83.2664% 8.65132 106.895);
-      --color-green-500: lab(70.5521% -66.5147 45.8072);
-      --color-green-600: lab(59.0978% -58.6621 41.2579);
       --color-blue-500: lab(54.1736% 13.3368 -74.6839);
       --color-blue-600: lab(44.0605% 29.0279 -86.0352);
       --color-indigo-300: lab(74.0235% 8.54138 -41.6075);
@@ -359,7 +350,6 @@
       --color-gray-700: lab(27.1134% -.956401 -12.3224);
       --color-gray-800: lab(16.1051% -1.18239 -11.7533);
       --color-gray-900: lab(8.11897% .811279 -12.254);
-      --color-gray-950: lab(1.90334% .278696 -5.48866);
       --color-zinc-300: lab(84.9837% .601262 -2.17985);
       --color-zinc-500: lab(47.8878% 1.65477 -5.77283);
       --color-zinc-700: lab(26.8019% 1.35386 -4.68303);
@@ -719,10 +709,6 @@
 @layer components;
 
 @layer utilities {
-  .mt-2 {
-    margin-top: calc(var(--spacing) * 2);
-  }
-
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
@@ -821,10 +807,6 @@
     width: 100%;
   }
 
-  .max-w-2xl {
-    max-width: var(--container-2xl);
-  }
-
   .max-w-3xl {
     max-width: var(--container-3xl);
   }
@@ -891,10 +873,6 @@
 
   .gap-2 {
     gap: calc(var(--spacing) * 2);
-  }
-
-  .gap-4 {
-    gap: calc(var(--spacing) * 4);
   }
 
   .gap-6 {
@@ -1031,10 +1009,6 @@
     background-color: var(--color-blue-600);
   }
 
-  .bg-gray-600 {
-    background-color: var(--color-gray-600);
-  }
-
   .bg-gray-700 {
     background-color: var(--color-gray-700);
   }
@@ -1045,14 +1019,6 @@
 
   .bg-gray-900 {
     background-color: var(--color-gray-900);
-  }
-
-  .bg-gray-950 {
-    background-color: var(--color-gray-950);
-  }
-
-  .bg-green-600 {
-    background-color: var(--color-green-600);
   }
 
   .bg-indigo-600 {
@@ -1069,10 +1035,6 @@
 
   .bg-zinc-800 {
     background-color: var(--color-zinc-800);
-  }
-
-  .bg-zinc-900 {
-    background-color: var(--color-zinc-900);
   }
 
   .bg-zinc-900\/80 {
@@ -1132,10 +1094,6 @@
 
   .p-2 {
     padding: calc(var(--spacing) * 2);
-  }
-
-  .p-3 {
-    padding: calc(var(--spacing) * 3);
   }
 
   .p-4 {
@@ -1416,20 +1374,8 @@
   }
 
   @media (hover: hover) {
-    .hover\:bg-gray-500:hover {
-      background-color: var(--color-gray-500);
-    }
-  }
-
-  @media (hover: hover) {
     .hover\:bg-gray-600:hover {
       background-color: var(--color-gray-600);
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:bg-green-500:hover {
-      background-color: var(--color-green-500);
     }
   }
 

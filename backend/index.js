@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import {DBconnection} from './src/utils/DBConnection.js'
+import {DBconnection} from './src/services/DBConnection.service.js'
 import autenticacion from './src/routes/autenticacion.route.js';
 import noticia from './src/routes/noticia.route.js';
 import pokemones from './src/routes/pokemon.route.js';
