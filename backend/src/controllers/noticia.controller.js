@@ -2,32 +2,32 @@ import Noticia from "../models/noticia.model.js";
 import mongoose from "mongoose";
 import { salvarImagenBase64, moverImagenVieja } from "../services/file.service.js";
 import { validateText, desencriptaCaracteresRaros } from "../services/validation.service.js";
+import { ErrorApp } from "../utils/ErrorApp.js";
 
 // GET[:id]
 export const noticia = async (req, res) => {
   try {
     const { NoticiaId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(NoticiaId)) {
-      return res.status(400).json({ success: false, mensaje: "ID de noticia inválido" });
+      throw new ErrorApp("ID de noticia invalido", 400)
     }
 
     let noticia = await Noticia.findById(NoticiaId).populate("autor", "username email").lean(); // Hacemos referencias a otros documentos para traer el nombre y email. Posterior aplicamos una mascara de texto plano(no documentos)
     if (!noticia || !noticia.esMostrable) {
-      return res.status(404).json({ success: false, mensaje: "Noticia no encontrada" });
+      throw new ErrorApp("Noticia no encontrada", 404);
     }
     noticia.title = desencriptaCaracteresRaros(noticia.title);
     noticia.descripcion = desencriptaCaracteresRaros(noticia.descripcion);
 
-    console.log({
-      original: noticia.title,
-      decoded: desencriptaCaracteresRaros(noticia.title)
-    });
-
-
     res.status(200).json({ success: true, data: noticia });
   } catch (error) {
-    console.error("Error en noticia:", error.message);
-    res.status(500).json({ success: false, mensaje: "Error interno del servidor" });
+    if(error instanceof ErrorApp){
+      console.log("Error: " + error);
+      res.status(error.status).json({mensaje: error.mensaje})
+    }else{
+      console.error("Error en la noticia:", error.message);
+      res.status(500).json({ mensaje: "Error en el servidor" });
+    }
   }
 };
 
@@ -39,10 +39,11 @@ export const noticias = async (req, res) => {
     limit = Number(limit);
 
     if (!Number.isInteger(page) || !Number.isInteger(limit)) {
-      return res.status(400).json({ success: false, mensaje: "Los parámetros deben ser enteros" });
+      throw new ErrorApp("Los parametros deben de ser enteros", 400)
+
     }
     if (limit <= 0 || limit > 10) {
-      return res.status(400).json({ success: false, mensaje: "El límite debe ser entre 1 y 10" });
+      throw new ErrorApp("El limite debe ser entre 1 y 10", 400);
     }
 
     const total = await Noticia.countDocuments({ esMostrable: true });
@@ -50,7 +51,7 @@ export const noticias = async (req, res) => {
 
     const totalPages = Math.ceil(total / limit);
     if (page <= 0 || page > totalPages) {
-      return res.status(404).json({ success: false, mensaje: "Página fuera de rango" });
+      throw new ErrorApp("Pagina fuera de rango", 404);
     }
 
     let allNoticias = await Noticia.find({ esMostrable: true })
@@ -68,8 +69,13 @@ export const noticias = async (req, res) => {
 
     res.status(200).json({ success: true, noticias: allNoticias, total, totalPages });
   } catch (error) {
-    console.error("Error en noticias:", error);
-    res.status(500).json({ success: false, mensaje: "Error interno del servidor" });
+    if(error instanceof ErrorApp){
+        console.log("Error: " + error);
+        res.status(error.status).json({mensaje: error.mensaje})
+    }else{
+      console.error("Error en las noticias:", error.message);
+      res.status(500).json({ mensaje: "Error en el servidor" });
+    }
   }
 };
 
@@ -78,9 +84,9 @@ export const addNoticia = async (req, res) => {
   try {
     const { title, imageBase64, esMostrable = true, descripcion = "" } = req.body;
 
-    if (!title) return res.status(400).json({ success: false, mensaje: "El título es obligatorio" });
+    if (!title) throw new ErrorApp("El titulo es obligatorio", 400);
     if (!req.user || !req.user.userId)
-      return res.status(401).json({ success: false, mensaje: "Usuario no autenticado" });
+      throw new ErrorApp("Usuario no autenticado", 401);
 
     
     const tituloSeguro = validateText(title);
@@ -107,8 +113,13 @@ export const addNoticia = async (req, res) => {
       mensaje: "Noticia creada correctamente"
     });
   } catch (error) {
-    console.error("Error en addNoticia:", error.message);
-    res.status(500).json({ success: false, mensaje: "Error interno del servidor" });
+    if(error instanceof ErrorApp){
+        console.log("Error: " + error);
+        res.status(error.status).json({mensaje: error.mensaje})
+    }else{
+      console.error("Error en registro:", error.message);
+      res.status(500).json({ mensaje: "Error en el servidor" });
+    }
   }
 };
 
@@ -119,11 +130,11 @@ export const updateNoticia = async (req, res) => {
     const { title, esMostrable, imageBase64, descripcion } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(NoticiaId)) {
-      return res.status(400).json({ success: false, mensaje: "ID de noticia inválido" });
+      throw new ErrorApp("ID de noticia invalido", 400);
     }
 
     const noticia = await Noticia.findById(NoticiaId);
-    if (!noticia) return res.status(404).json({ success: false, mensaje: "Noticia no encontrada" });
+    if (!noticia) throw new ErrorApp("Noticia no encontrada", 404);
 
     if (title) noticia.title = validateText(title);
     if (descripcion) noticia.descripcion = validateText(descripcion);
@@ -152,8 +163,13 @@ export const updateNoticia = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Error en updateNoticia:", error.message);
-    res.status(500).json({ success: false, mensaje: "Error interno del servidor" });
+    if(error instanceof ErrorApp){
+        console.log("Error: " + error);
+        res.status(error.status).json({mensaje: error.mensaje})
+    }else{
+      console.error("Error en registro:", error.message);
+      res.status(500).json({ mensaje: "Error en el servidor" });
+    }
   }
 };
 

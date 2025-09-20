@@ -3,13 +3,14 @@ import User from "../models/user.model.js";
 import { generartoken } from "../lib/utils.js";
 import { validateEmail, validateContra, validateUser } from "../services/validation.service.js";
 import { ErrorApp } from "../utils/ErrorApp.js";
+
 export const register = async (req, res) => {
     try {
         const { username, email, password, sexo } = req.body;
 
         // Validación básica
         if (!username || !email || !password) {
-            return res.status(400).json({ mensaje: "Favor de llenar todos los campos" });
+            throw new ErrorApp("Favor de llenar todos los campos", 400);
         }
         validateUser(username);
         validateEmail(email);
@@ -18,7 +19,7 @@ export const register = async (req, res) => {
         // Verificar si el usuario ya existe
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
-            return res.status(400).json({ mensaje: "El usuario o correo ya están registrados" });
+            throw new ErrorApp("El correo o usuario ya se encuentran", 400);
         }
 
         // Hashear contraseña
@@ -45,7 +46,7 @@ export const register = async (req, res) => {
             res.status(error.status).json({mensaje: error.mensaje})
         }else{
         console.error("Error en registro:", error.message);
-        res.status(500).json({ mensaje: "Hubo un error en el servidor" });
+        res.status(500).json({mensaje: "Error en el servidor"});
         }
     }
 };
@@ -55,7 +56,7 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ mensaje: "Favor de llenar todos los campos" });
+            throw new ErrorApp("Favor de llenar todos los campos", 400);
         }
 
         validateEmail(email);
@@ -63,12 +64,12 @@ export const login = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({ mensaje: "Credenciales incorrectas" });
+            throw new ErrorApp("Credenciales incorrectas", 401);
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
-            return res.status(401).json({ mensaje: "Credenciales incorrectas" });
+            throw new ErrorApp("Credenciales incorrectas", 401);
         }
 
         generartoken(user, res);
@@ -79,7 +80,7 @@ export const login = async (req, res) => {
             res.status(error.status).json({mensaje: error.mensaje})
         }else{
         console.error("Error en registro:", error.message);
-        res.status(500).json({ mensaje: "Hubo un error en el servidor" });
+        res.status(500).json({ mensaje: "Error en el servidor" });
         }
     }
 };
@@ -98,8 +99,13 @@ export const checarAutenticado = (req, res) => {
       mensaje: "Usuario autenticado"
     });
   } catch (error) {
-    console.error("Error en autenticación:", error.message);
-    res.status(500).json({ mensaje: "Error interno del servidor" });
+    if(error instanceof ErrorApp){
+        console.log("Error: " + error);
+        res.status(error.status).json({mensaje: error.mensaje})
+    }else{
+    console.error("Error en registro:", error.message);
+    res.status(500).json({ mensaje: "Error en el servidor" });
+    }
   }
 };
 
@@ -114,6 +120,6 @@ export const logout = (req, res) => {
         res.status(200).json({ mensaje: "Sesión cerrada correctamente" });
     } catch (error) {
         console.error("Error en logout:", error.message);
-        res.status(500).json({ mensaje: "Error interno del servidor" });
+        res.status(500).json({ mensaje: "Error en el servidor" });
     }
 };
