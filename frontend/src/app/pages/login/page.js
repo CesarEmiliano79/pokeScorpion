@@ -1,7 +1,7 @@
 "use client";
+import { fetchLogin } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -12,15 +12,9 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:3001/api/autenticacion/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
+      const data = await fetchLogin( email, password );
+      console.log(data);
+      if (!data.ok) {
         setMensaje(data.mensaje || "Ocurrió un error");
         return;
       }

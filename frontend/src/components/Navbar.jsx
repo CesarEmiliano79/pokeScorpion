@@ -4,28 +4,23 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "@/app/css/Navbar.css";
-
+import { autenticado, cerrarSesion } from "@/lib/api";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setAdmin] = useState(false);
   const router = useRouter();
-
   // Verificar si el usuario tiene cookie JWT válida
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/autenticacion/check", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // importante para cookies httpOnly
-        });
+        const data = await autenticado();
 
-        if (!res.ok) {
+        if (!data.ok) {
           setIsLogged(false);
           return;
         }
-        const data = await res.json();
+
         setAdmin(data.esAdmin);
         setIsLogged(true);
       } catch (error) {
@@ -40,10 +35,7 @@ export default function Navbar() {
   // Función para cerrar sesión
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3001/api/autenticacion/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await cerrarSesion();
       setIsLogged(false);
       router.replace("/"); // Redirige al inicio
     } catch (error) {
@@ -82,7 +74,7 @@ export default function Navbar() {
             <Link href="/pages/noticias">Noticias</Link>
             {/* <Link href="/pages/pokemones">Pokemones</Link> */}
             {console.log("Aqui si hay o no hay admin " + isAdmin)}
-            {isAdmin && <Link href="/pages/crea-noticia">Agrega noticia</Link>}
+            {isAdmin && <Link href="/pages/noticias/crea-noticia">Agrega noticia</Link>}
             <button
               onClick={handleLogout}
               className="bg-red-600 text-white px-3 py-1 rounded-md"

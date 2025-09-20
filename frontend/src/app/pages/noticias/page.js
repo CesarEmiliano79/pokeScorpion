@@ -17,7 +17,7 @@ export default function NoticiasPage() {
     const loadNoticias = async () => {
       setLoading(true);
       try {
-        const data = await fetchNoticias(currentPage, 10);
+        const data = await fetchNoticias(currentPage, 9);
         setNoticias(data.noticias);
         setTotalPages(data.totalPages);
       } catch (error) {
@@ -46,7 +46,6 @@ export default function NoticiasPage() {
           ))}
         </div>
       )}
-
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

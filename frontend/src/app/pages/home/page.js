@@ -1,8 +1,8 @@
 "use client";
 import Navbar from '@/components/Navbar'
 import ProtectedPage from '@/components/ProtectedPage'
+import { CargaImagen, fetchNoticias } from '@/lib/api';
 import React, { useEffect, useRef, useState } from 'react'
-
 export default function Home() {
   const [noticias, setNoticias] = useState([]);
   const fetched = useRef(false);
@@ -11,13 +11,10 @@ export default function Home() {
     if (fetched.current) return;
     fetched.current = true;
 
-    const fetchNoticias = async () => {
+    const cargaInicialNoticias = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/noticias?page=1&limit=10", {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
+        
+        const data = await fetchNoticias();
         setNoticias(data.noticias || []);
         console.log(data.noticias)
       } catch (error) {
@@ -25,7 +22,7 @@ export default function Home() {
       }
     };
 
-  fetchNoticias();
+  cargaInicialNoticias();
 }, []);
 
   return (
@@ -43,7 +40,7 @@ export default function Home() {
       >
         {noticia.image && (
           <img
-            src={`http://localhost:3001/imagenesNoticias/${noticia.image}`}
+            src={CargaImagen(noticia.image)}
             alt={noticia.title}
             className="rounded-xl w-full h-40 object-cover mb-4"
           />

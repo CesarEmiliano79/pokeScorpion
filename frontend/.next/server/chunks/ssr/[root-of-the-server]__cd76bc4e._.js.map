@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 15, "column": 0}, "map": {"version":3,"sources":["file:///D:/Seguridad%20Informatica/ScorpionWeb/frontend/src/app/pages/page.js"],"sourcesContent":["export default function Login () {\r\n    return(\r\n        <h1>Hola Jotos</h1>\r\n    )\r\n}"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACpB,qBACI,8OAAC;kBAAG;;;;;;AAEZ","debugId":null}}]
-}

@@ -1,14 +1,14 @@
 // components/NewsCard.js
 import React from "react";
 import Link from "next/link";
-
+import { CargaImagen } from "@/lib/api";
 export default function NewsCard( noticia ) {
   return (
     <Link href={`/pages/noticias/${noticia._id}`}>
       <div className="bg-gray-900 rounded-2xl shadow-xl p-4 w-80 flex-shrink-0 transition-transform hover:scale-105 hover:shadow-2xl cursor-pointer">
         {noticia.image && (
           <img
-            src={`http://localhost:3001/imagenesNoticias/${noticia.image}`}
+            src={CargaImagen(noticia.image)}
             alt={noticia.titulo}
             className="rounded-xl w-full h-40 object-cover mb-4"
           />

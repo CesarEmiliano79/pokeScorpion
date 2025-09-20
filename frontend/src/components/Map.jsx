@@ -1,16 +1,21 @@
+import { ubicacion } from "@/lib/api";
 import { useEffect, useRef, useState } from "react";
-
 export default function MapComponent() {
   const [locations, setLocations] = useState([]);
   const mapRef = useRef(null); // referencia al contenedor del mapa
   const mapInstance = useRef(null);
 
   useEffect(() => {
-    // Traer ubicaciones del backend
-    fetch("http://localhost:3001/api/ubicacion")
-      .then((res) => res.json())
-      .then((data) => setLocations(data));
+    const fetchUbicacion = async () => {
+      const data = await ubicacion();
+      console.log(data)
+      setLocations(data);
+    };
+
+    fetchUbicacion(); 
+    console.log("adios");
   }, []);
+
 
   useEffect(() => {
     // Función para cargar el script solo una vez

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-
+import { fetchNoticia, updateNoticia } from "@/lib/api";
 export default function EditarNoticia() {
   const { id } = useParams();
   const router = useRouter();
@@ -16,10 +16,10 @@ export default function EditarNoticia() {
   const [esMostrable, setEsMostrable] = useState(true);
 
   useEffect(() => {
-    const fetchNoticia = async () => {
+    const cargaInicialNoticia = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/noticias/noticia/${id}`);
-        const data = await res.json();
+        const data = await fetchNoticia(id);
+        console.log(data);
         setNoticia(data.data);
         setTitle(data.data.title || "");
         setDescripcion(data.data.descripcion || "");
@@ -29,7 +29,7 @@ export default function EditarNoticia() {
       }
       setLoading(false);
     };
-    fetchNoticia();
+    cargaInicialNoticia();
   }, [id]);
 
   const handleImageChange = (e) => {
@@ -43,20 +43,8 @@ export default function EditarNoticia() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:3001/api/noticias/update-noticia/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          descripcion,
-          esMostrable,
-          imageBase64,
-        }),
-        credentials: "include", 
-      });
-
-      const data = await res.json();
-      if (res.ok) {
+      const data = await updateNoticia(id, title, descripcion, esMostrable, imageBase64);
+      if (data.ok) {
         alert("Noticia actualizada correctamente");
         router.push(`/pages/noticias/${id}`);
       } else {

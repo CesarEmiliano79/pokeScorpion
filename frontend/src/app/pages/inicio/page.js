@@ -23,7 +23,7 @@ export default function Inicio() {
       .map(({ value }) => value);
   };
 
-  // Creamos tres tracks con imágenes aleatorias
+  // Creacion del array de imagenes
   const loopImages = [];
   for (let i = 0; i < 10; i++) loopImages.push(...images);
 

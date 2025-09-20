@@ -2,56 +2,44 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-
+import { autenticado, CargaImagen, fetchNoticia, ocultaNoticia } from "@/lib/api";
 export default function NoticiaDetalle() {
   const { id } = useParams();
   const router = useRouter();
   const [noticia, setNoticia] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setAdmin] = useState(false);
-    const [isLogged, setIsLogged] = useState(false);
   useEffect(() => {
-    const fetchNoticia = async () => {
+      const checkAuth = async () => {
+        try {
+          const data = await autenticado();
+  
+          if (data.ok) {
+            setAdmin(data.esAdmin)
+            console.log("Si es admin")
+          }
+          
+        } catch (error) {
+          console.error('Error al verificar sesión:', error);
+        }
+      };
+  
+      checkAuth();
+    }, []);
+  useEffect(() => {
+    const CargaInicialNoticia = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/noticias/noticia/${id}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        mode: "cors"
-        });
-        const data = await res.json();
-        console.log(data["data"])
+        
+        const data = await fetchNoticia(id);
         setNoticia(data["data"]);
       } catch (error) {
         console.error(error);
       }
       setLoading(false);
     };
-    fetchNoticia();
+    CargaInicialNoticia();
   }, [id]);
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch("http://localhost:3001/api/autenticacion/check", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // importante para cookies httpOnly
-        });
-
-        if (!res.ok) {
-          setIsLogged(false);
-          return;
-        }
-        const data = await res.json();
-        setAdmin(data.esAdmin);
-        setIsLogged(true);
-      } catch (error) {
-        console.error("Error al verificar sesión:", error);
-        setIsLogged(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
+  useEffect
 
   if (loading)
     return (
@@ -84,11 +72,7 @@ export default function NoticiaDetalle() {
 
       {isAdmin && <button
         onClick={async() => {
-            const res = await fetch(`http://localhost:3001/api/noticias/ocultar-noticia/${id}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include", 
-        });
+        await ocultaNoticia(id);
         router.push('/pages/noticias/');
         }}
         className="self-start mb-4 px-4 py-2 bg-gray-700 dark:bg-gray-600 text-white rounded hover:bg-gray-600 dark:hover:bg-gray-500 transition"
@@ -101,7 +85,7 @@ export default function NoticiaDetalle() {
 
         {noticia.image && (
           <img
-            src={`http://localhost:3001/imagenesNoticias/${noticia.image}`}
+            src={CargaImagen(noticia.image)}
             alt={noticia.titulo}
             className="rounded-xl w-full h-64 object-cover mb-6 shadow-lg"
           />

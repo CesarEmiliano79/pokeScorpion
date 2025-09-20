@@ -10,7 +10,7 @@ import pokemones from './src/routes/pokemon.route.js';
 import nosotros from './src/routes/nosotros.route.js';
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 const __dirname = path.resolve();
 
 app.use(express.json({ limit: "10mb" }));

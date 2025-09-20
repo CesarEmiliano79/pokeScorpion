@@ -72,7 +72,7 @@ export const login = async (req, res) => {
         }
 
         generartoken(user, res);
-        res.status(200).json({ mensaje: `Bienvenido ${user.username}` });
+        res.status(200).json({ mensaje: `Bienvenido ${user.username}`});
     } catch (error) {
         if(error instanceof ErrorApp){
             console.log("Error: " + error);

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ App Router correcto
-
+import { useRouter } from "next/navigation";
+import { fetchRegister } from "@/lib/api";
 export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -16,17 +16,10 @@ export default function Register() {
     setMensaje("");
 
     try {
-      const res = await fetch("http://localhost:3001/api/autenticacion/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password, sexo }),
-        credentials: "include",
-      });
 
-      const data = await res.json();
-      console.log(data);
+      const data = await fetchRegister(username, email, password, sexo);
 
-      if (!res.ok) {
+      if (!data.ok) {
         setMensaje(data.mensaje || "Ocurrió un error");
         return;
       }

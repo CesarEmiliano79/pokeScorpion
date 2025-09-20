@@ -9,8 +9,6 @@ export default function Home() {
     <ProtectedPage>
       <Navbar />
       <main className="bg-black min-h-screen text-white flex flex-col items-center px-6">
-        
-        {/* Hero */}
         <section className="w-full max-w-4xl text-center mt-20 mb-16">
           <h2 className="text-5xl font-extrabold mb-6 tracking-wide">
             Bienvenido a <span className="text-red-500">pokeScorpion</span>
@@ -21,8 +19,6 @@ export default function Home() {
             <span className="text-yellow-400"> Guadalajara</span>.
           </p>
         </section>
-
-        {/* Sobre Nosotros */}
         <section className="w-full max-w-5xl bg-neutral-900 rounded-2xl shadow-lg p-10 mb-16">
           <h2 className="text-3xl font-bold mb-6 border-b border-gray-700 pb-3">
             Sobre Nosotros
@@ -52,7 +48,7 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Mapa */}
+        {/* Mapa de la republica con nuestras supuestas sucursales */}
         <section className="w-full max-w-5xl mb-16">
           <h2 className="text-3xl font-bold text-center mb-6">Nuestras Sucursales</h2>
           <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-700">

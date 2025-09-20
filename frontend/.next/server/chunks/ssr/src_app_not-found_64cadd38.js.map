@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///D:/Seguridad%20Informatica/ScorpionWeb/frontend/src/app/not-found.js"],"sourcesContent":["export default function NotFound() {\r\n  return (\r\n    <div className=\"flex items-center justify-center min-h-screen bg-black\">\r\n      <div className=\"bg-zinc-800 rounded-2xl shadow-lg p-10 text-center max-w-md\">\r\n        <Image src=\"/sad-pikachu.gif\"\r\n        alt= \"error 404\"\r\n        className = \"w-40 h-40 mx-auto mb-6\"/>\r\n        <h1 className=\"text-9xl font-bold text-amber-600\">404</h1>\r\n        <p className=\"mt-4 text-lg text-gray-600\">\r\n          Lo sentimos, pero no pudimos encontrar lo que quieres :(\r\n        </p>\r\n      </div>\r\n    </div>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;QAAI,WAAU;kBACb,cAAA,8OAAC;YAAI,WAAU;;8BACb,8OAAC;oBAAM,KAAI;oBACX,KAAK;oBACL,WAAY;;;;;;8BACZ,8OAAC;oBAAG,WAAU;8BAAoC;;;;;;8BAClD,8OAAC;oBAAE,WAAU;8BAA6B;;;;;;;;;;;;;;;;;AAMlD","debugId":null}}]
-}
