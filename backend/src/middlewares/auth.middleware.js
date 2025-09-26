@@ -4,7 +4,6 @@ import User from "../models/user.model.js";
 export const protectRoute = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
-        console.log("Entra aqui este valor " + token + "---");
 
         if (!token) {
             return res.status(401).json({ mensaje: "Acción no autorizada - No existen credenciales" });
@@ -13,7 +12,6 @@ export const protectRoute = async (req, res, next) => {
         let decoded;
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log(decoded)
         } catch (error) {
             if (error.name === "TokenExpiredError") {
                 return res.status(401).json({ mensaje: "Sesión expirada. Vuelve a iniciar sesión." });
@@ -49,7 +47,6 @@ export function esAdmin(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded)
     if (decoded.rol) {
       return res.status(403).json({ mensaje: "No autorizado" });
     }
