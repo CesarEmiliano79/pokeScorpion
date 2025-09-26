@@ -1,4 +1,6 @@
 import { ErrorApp } from "../utils/ErrorApp.js";
+import { readFile } from 'fs/promises';
+import path from 'path';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const userRegex = /^[A-Za-z0-9._-]+$/;
@@ -21,6 +23,18 @@ const caracteresPeligrosos = /[\$\{\}\[\]]/g; // $ { } [ ]
     pero cuando lo traiga de vuelta este aca al 100, chido.
 */
 
+let blocklist;
+
+export async function isDisposable(email) {
+  if (!blocklist) {
+
+    const filePath = path.join(process.cwd(), 'disposable_email_blocklist.conf');
+    const content = await readFile(filePath, { encoding: 'utf-8' });
+    blocklist = content.split(/\r?\n/).filter(Boolean);
+  }
+  const domain = email.split('@')[1].toLowerCase();
+  return blocklist.includes(email.split('@')[1]);
+}
 
 
 // Encripta caracteres que pueden causar inyecciones, y las encriptamos a ENC[0xAlgo]
@@ -46,22 +60,37 @@ export function desencriptaCaracteresRaros(text) {
 }
 
 //#region Validaciones anti Jochis
-export function validateEmail(email) {
-  if (!emailRegex.test(email)) 
-    throw new ErrorApp('Formato no valido', 400);
-  return email;
+export async function validateEmail(email) {
+  try{
+    if (!emailRegex.test(email)) 
+      throw new ErrorApp('Formato no valido', 400);
+    if (await isDisposable(email))
+      throw new ErrorApp('No se aceptan emails temporales', 400)
+    return email;
+  } catch(err){
+    throw err;
+  }
 }
 
 export function validateContra(password){
+  try{
     if (!passwordRegex.test(password)){
         throw new ErrorApp("La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial", 400);
     }
     return password
+  } catch(err){
+    throw err;
+  }
 }
 
 export function validateUser(user) {
-  if (!userRegex.test(user)) throw new ErrorApp('Nop, no puedes. Deja de meter cosas raras, ni espacios!', 400);
-  return user;
+  try{
+    if (!userRegex.test(user)) 
+      throw new ErrorApp('Nop, no puedes. Deja de meter cosas raras, ni espacios!', 400);
+    return user;
+  } catch(err){
+    throw err;
+  }
 }
 
 export function validateName(name) {

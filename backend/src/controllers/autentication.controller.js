@@ -13,7 +13,7 @@ export const register = async (req, res) => {
             throw new ErrorApp("Favor de llenar todos los campos", 400);
         }
         validateUser(username);
-        validateEmail(email);
+        await validateEmail(email);
         validateContra(password);
 
         // Verificar si el usuario ya existe
@@ -38,7 +38,6 @@ export const register = async (req, res) => {
         });
 
         await newUser.save();
-        generartoken(newUser, res);
         res.status(201).json({ mensaje: "Usuario registrado correctamente" });
     } catch (error) {
         if(error instanceof ErrorApp){
